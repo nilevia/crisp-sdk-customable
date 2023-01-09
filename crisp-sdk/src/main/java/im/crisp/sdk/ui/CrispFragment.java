@@ -183,10 +183,10 @@ public class CrispFragment extends Fragment {
     }
 
 	private boolean restrictUrl(String givenUrl) {
-		String allowedUrlRegex = "(https://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
-			"(https://)?([a-z0-9]+[.])?(e-ipo)[.]co[.]id(/[a-z0-9])?|" +
-			"(https://)?([a-z0-9]+[.])?(jago)[.]com|" +
-			"(https://)?([a-z0-9]+[.])?(idx)[.]co[.]id(/[a-z0-9])?";
+		String allowedUrlRegex = "((http|https)://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
+			"((http|https)://)?([a-z0-9]+[.])?(e-ipo)[.]co[.]id(/[a-z0-9])?|" +
+			"((http|https)://)?([a-z0-9]+[.])?(jago)[.]com|" +
+			"((http|https)://)?([a-z0-9]+[.])?(idx)[.]co[.]id(/[a-z0-9])?";
 		Pattern pattern = Pattern.compile(
 			allowedUrlRegex,
 			Pattern.CASE_INSENSITIVE
