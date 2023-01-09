@@ -9,7 +9,7 @@ allprojects {
  
 
 	dependencies {
-	        implementation 'com.github.nilevia:crisp-sdk-android:1.0.5-niel'
+	        implementation 'com.github.nilevia:crisp-sdk-android:1.0.6-niel'
 	}
 ```
  
