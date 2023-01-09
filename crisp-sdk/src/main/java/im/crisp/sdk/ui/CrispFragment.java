@@ -28,9 +28,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import im.crisp.sdk.Crisp;
 import im.crisp.sdk.R;
@@ -48,9 +54,9 @@ public class CrispFragment extends Fragment {
     private ValueCallback<Uri[]> mFilePathCallback;
     private String mCameraPhotoPath;
 
-    private static LinkedList<String> commandQueue = new LinkedList<String>();
+    private static final LinkedList<String> commandQueue = new LinkedList<String>();
 
-    public static boolean isLoaded = false;
+	public static boolean isLoaded = false;
 
     public CrispFragment() {
     }
@@ -61,7 +67,7 @@ public class CrispFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.crisp_view, container, false);
 
         // Get reference of WebView from layout/activity_main.xml
-        mWebView = (WebView) rootView.findViewById(R.id.crisp_view_webview);
+        mWebView = rootView.findViewById(R.id.crisp_view_webview);
 
         setUpWebViewDefaults(mWebView);
 
@@ -113,11 +119,9 @@ public class CrispFragment extends Fragment {
                     return true;
                 }
 
-
-                return false;
+				return restrictUrl(url);
             }
         });
-
         mWebView.setWebChromeClient(new WebChromeClient() {
             public boolean onShowFileChooser(
                     WebView webView, ValueCallback<Uri[]> filePathCallback,
@@ -176,6 +180,23 @@ public class CrispFragment extends Fragment {
         load();
         return rootView;
     }
+
+	private boolean restrictUrl(String givenUrl) {
+		String allowedUrlRegex = "(https://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
+			"(https://)?([a-z0-9]+[.])?(e-ipo)[.]co[.]id(/[a-z0-9])?|" +
+			"(https://)?([a-z0-9]+[.])?(jago)[.]com|" +
+			"(https://)?([a-z0-9]+[.])?(idx)[.]co[.]id(/[a-z0-9])?";
+		Pattern pattern = Pattern.compile(
+			allowedUrlRegex,
+			Pattern.CASE_INSENSITIVE
+		);
+
+		boolean result = pattern.matcher(givenUrl).lookingAt();
+
+		Log.d("Allowed url : ", givenUrl +" "+ result +" restrict url = "+ !result);
+
+		return !result;
+	}
 
     /**
      * More info this method can be found at
