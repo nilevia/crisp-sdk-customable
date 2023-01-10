@@ -178,22 +178,22 @@ public class CrispFragment extends Fragment {
         return rootView;
     }
 
-	private boolean restrictUrl(String givenUrl) {
-		String allowedUrlRegex = "((http|https)://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
-			"((http|https)://)?([a-z0-9]+[.])?(e-ipo)[.]co[.]id(/[a-z0-9])?|" +
-			"((http|https)://)?([a-z0-9]+[.])?(jago)[.]com|" +
-			"((http|https)://)?([a-z0-9]+[.])?(idx)[.]co[.]id(/[a-z0-9])?";
-		Pattern pattern = Pattern.compile(
-			allowedUrlRegex,
-			Pattern.CASE_INSENSITIVE
-		);
-
-		boolean result = pattern.matcher(givenUrl).lookingAt();
-
-		Log.d("Allowed url : ", givenUrl +" "+ result +" restrict url = "+ !result);
-
-		return !result;
-	}
+//	private boolean restrictUrl(String givenUrl) {
+//		String allowedUrlRegex = "((http|https)://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
+//			"((http|https)://)?([a-z0-9]+[.])?(e-ipo)[.]co[.]id(/[a-z0-9])?|" +
+//			"((http|https)://)?([a-z0-9]+[.])?(jago)[.]com|" +
+//			"((http|https)://)?([a-z0-9]+[.])?(idx)[.]co[.]id(/[a-z0-9])?";
+//		Pattern pattern = Pattern.compile(
+//			allowedUrlRegex,
+//			Pattern.CASE_INSENSITIVE
+//		);
+//
+//		boolean result = pattern.matcher(givenUrl).lookingAt();
+//
+//		Log.d("Allowed url : ", givenUrl +" "+ result +" restrict url = "+ !result);
+//
+//		return !result;
+//	}
 
     /**
      * More info this method can be found at
