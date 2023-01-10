@@ -114,11 +114,7 @@ public class CrispFragment extends Fragment {
                     return true;
                 }
 
-                if (url.startsWith("intent") || !restrictUrl(url)) {
-                    handleIntentToLink(url);
-
-                    return true;
-                }
+				handleIntentToLink(url);
 
 				return true;
             }
