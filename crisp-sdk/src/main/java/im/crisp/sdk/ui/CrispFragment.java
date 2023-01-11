@@ -87,36 +87,22 @@ public class CrispFragment extends Fragment {
                 flushQueue();
             }
 
+			//some android old versions like vivo with android 6 api level 23
+			//this method is called when user click links
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("mailto")) {
-                    handleMailToLink(url);
-                    return true;
-                }
-
-                return false;
+				return handleUrl(url);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = "";
+
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     url = request.getUrl().toString();
                 }
 
-                if (url.startsWith("mailto")) {
-                    handleMailToLink(url);
-                    return true;
-                }
-
-                if (url.startsWith("tel:")) {
-                    handleTelToLink(url);
-                    return true;
-                }
-
-				handleIntentToLink(url);
-
-				return true;
+				return handleUrl(url);
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -177,6 +163,24 @@ public class CrispFragment extends Fragment {
         load();
         return rootView;
     }
+
+	private boolean handleUrl(String url) {
+		if (url.startsWith("mailto")) {
+			handleMailToLink(url);
+
+			return true;
+		}
+
+		if (url.startsWith("tel:")) {
+			handleTelToLink(url);
+
+			return true;
+		}
+
+		handleIntentToLink(url);
+
+		return true;
+	}
 
 //	private boolean restrictUrl(String givenUrl) {
 //		String allowedUrlRegex = "((http|https)://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
