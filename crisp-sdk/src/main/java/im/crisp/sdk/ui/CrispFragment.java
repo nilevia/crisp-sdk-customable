@@ -28,9 +28,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import im.crisp.sdk.Crisp;
 import im.crisp.sdk.R;
@@ -48,9 +54,9 @@ public class CrispFragment extends Fragment {
     private ValueCallback<Uri[]> mFilePathCallback;
     private String mCameraPhotoPath;
 
-    private static LinkedList<String> commandQueue = new LinkedList<String>();
+    private static final LinkedList<String> commandQueue = new LinkedList<String>();
 
-    public static boolean isLoaded = false;
+	public static boolean isLoaded = false;
 
     public CrispFragment() {
     }
@@ -61,7 +67,7 @@ public class CrispFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.crisp_view, container, false);
 
         // Get reference of WebView from layout/activity_main.xml
-        mWebView = (WebView) rootView.findViewById(R.id.crisp_view_webview);
+        mWebView = rootView.findViewById(R.id.crisp_view_webview);
 
         setUpWebViewDefaults(mWebView);
 
@@ -81,43 +87,24 @@ public class CrispFragment extends Fragment {
                 flushQueue();
             }
 
+			//some android old versions like vivo with android 6 api level 23
+			//this method is called when user click links
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("mailto")) {
-                    handleMailToLink(url);
-                    return true;
-                }
-
-                return false;
+				return handleUrl(url);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = "";
+
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     url = request.getUrl().toString();
                 }
 
-                if (url.startsWith("mailto")) {
-                    handleMailToLink(url);
-                    return true;
-                }
-
-                if (url.startsWith("tel:")) {
-                    handleTelToLink(url);
-                    return true;
-                }
-
-                if (url.startsWith("intent")) {
-                    handleIntentToLink(url);
-                    return true;
-                }
-
-
-                return false;
+				return handleUrl(url);
             }
         });
-
         mWebView.setWebChromeClient(new WebChromeClient() {
             public boolean onShowFileChooser(
                     WebView webView, ValueCallback<Uri[]> filePathCallback,
@@ -176,6 +163,41 @@ public class CrispFragment extends Fragment {
         load();
         return rootView;
     }
+
+	private boolean handleUrl(String url) {
+		if (url.startsWith("mailto")) {
+			handleMailToLink(url);
+
+			return true;
+		}
+
+		if (url.startsWith("tel:")) {
+			handleTelToLink(url);
+
+			return true;
+		}
+
+		handleIntentToLink(url);
+
+		return true;
+	}
+
+//	private boolean restrictUrl(String givenUrl) {
+//		String allowedUrlRegex = "((http|https)://)?([a-z0-9]+[.])?(stockbit)[.]com|" +
+//			"((http|https)://)?([a-z0-9]+[.])?(e-ipo)[.]co[.]id(/[a-z0-9])?|" +
+//			"((http|https)://)?([a-z0-9]+[.])?(jago)[.]com|" +
+//			"((http|https)://)?([a-z0-9]+[.])?(idx)[.]co[.]id(/[a-z0-9])?";
+//		Pattern pattern = Pattern.compile(
+//			allowedUrlRegex,
+//			Pattern.CASE_INSENSITIVE
+//		);
+//
+//		boolean result = pattern.matcher(givenUrl).lookingAt();
+//
+//		Log.d("Allowed url : ", givenUrl +" "+ result +" restrict url = "+ !result);
+//
+//		return !result;
+//	}
 
     /**
      * More info this method can be found at
